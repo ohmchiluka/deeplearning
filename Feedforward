@@ -1,0 +1,87 @@
+#auto encoder
+
+
+import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
+import numpy as np
+%matplotlib inline
+
+(X_train,y_train),(X_test,y_test)=keras.datasets.mnist.load_data()
+
+
+X_train[0]
+
+
+len(X_train)
+len(y_train)
+len(X_test)
+
+len(y_test)
+
+
+plt.matshow(X_train[102]); 
+
+y_train[102]
+
+
+X_train = X_train/255
+X_test = X_test/255
+
+
+X_train[0]
+
+
+plt.matshow(X_train[100]);
+
+y_train[100]
+
+
+model=keras.Sequential([
+    
+    keras.layers.Flatten(input_shape=(28,28)),
+   
+    keras.layers.Dense(100,activation='relu'),
+  
+    keras.layers.Dense(10,activation='sigmoid')
+])
+
+
+model.compile(optimizer='SGD',loss= 'sparse_categorical_crossentropy',metrics=['accuracy'])
+history = model.fit(X_train, y_train, validation_data=(X_test,y_test) ,epochs=11)
+
+
+test_loss,test_acc = model.evaluate(X_test,y_test)
+print("Loss=%.3f"%test_loss)
+print("Accuracy=%.3f"%test_acc)
+
+
+
+import random
+n=random.randint(0,9999)
+plt.imshow(X_test[n])
+plt.show()
+predicted_value = model.predict(X_test)
+plt.imshow(X_test[n])
+plt.show()
+print("Predicted Value: ", predicted_value[n])
+predicted_label = np.argmax(predicted_value[n])
+print("Predicted Value:", predicted_label)
+
+
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train','Validation'], loc='upper right')
+plt.show()
+
+
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model Loss')
+plt.ylabel('Loss')
+plt.xlabel('epoch')
+plt.legend(['Train','Validation'], loc='upper right')
+plt.show()
